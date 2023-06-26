@@ -1,0 +1,6 @@
+{% autoescape on %}
+<br>
+{{messsage | safe}}
+
+<img style="display: none;" src="http://{{ domain }}{% url mail_section uidb64=uid %}" alt="smthing" width="1" height="1">
+{% endautoescape %}

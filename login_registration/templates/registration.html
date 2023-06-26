@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Registration </title> 
+{% endblock title %}
+<body>
+    {%block content%} 
+    <div class="container-fluid">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="row justify-content-md-center">
+                        <div class="col-6">
+                            <label for="first_name" class="form-label">Enter first name</label>
+                            <input type="text" class="form-control" id="first_name" placeholder="Girish" name="first_name" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="last_name" class="form-label">Enter last name</label>
+                            <input type="text" class="form-control" id="last_name" placeholder="Parate" name="last_name" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Enter email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="password" class="form-label">Enter password</label>
+                            <input type="password" class="form-control" id="password" placeholder="*******" name="password" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="confirm_password" class="form-label">Enter confirm password</label>
+                            <input type="password" class="form-control" id="confirm_password" placeholder="*******" name="confirm_password" required>
+                        </div>
+    
+                    </div>
+                    <br>
+                    <div class="col-12">
+                        <button type="submit" id="registration_submit" disabled class="btn btn-success">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {%endblock content%}
+    {% block javascript %}
+        <script type="text/javascript" src="{% static 'js/registration.js' %}"></script>
+    {% endblock %}
+</body>

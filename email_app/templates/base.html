@@ -1,0 +1,205 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+    <title>base</title>
+    {% endblock title %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    
+</head>
+    {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+    </div>
+    {% endfor %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="/">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            {% if not request.user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Login / Registration
+                </a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/login/login">Login</a></li>
+                <li><a class="dropdown-item" href="/login/registration">Registration</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page">Hi, {{request.user.first_name}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="login/logout">Logout</a>
+            </li>
+            <li>
+                {% if email_credentials %}
+                <!-- button to compose the email -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compose_modal">
+                    Compose Mail
+                </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="compose_modal" tabindex="-1" role="dialog" aria-labelledby="compose_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="compose_modalLabel">Compose Mail</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="send-email" method="POST">
+                                {% csrf_token %}
+                                <div class="row justify-content-md-center">
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">Enter email address</label>
+                                        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="receiver" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="suject" class="form-label">Enter Subject</label>
+                                        <input type="text" max="1000" class="form-control" id="suject" placeholder="Subject" name="subject" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="mail_body" class="form-label">Body</label>
+                                        <textarea class="form-control" id="mail_body" rows="3" name="body" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                  </div>
+                            </form>
+                            
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                
+                  <!-- button to update the email credentials -->
+                  <button type="button" class="btn btn-Success" data-toggle="modal" data-target="#update">
+                    Update Email Credentials
+                </button>
+
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="updateLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="updateLabel">Update Email Credentials</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="update_email_cred">
+                                {% csrf_token %}
+                                <div class="row justify-content-md-center">
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">Enter email address</label>
+                                        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" value="{{email_credentials.email}}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="email_password" class="form-label">Enter email password</label>
+                                        <input type="text" class="form-control" id="email_password" placeholder="Password id Encrypted" name="email_password" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="smtp_provider" class="form-label">Enter email smtp provider</label>
+                                        <input type="text" max="1000" class="form-control" id="smtp_provider" placeholder="smtp.gmail.com" name="smtp_provider" value="{{email_credentials.smtp_provider}}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="port" class="form-label">Enter email smtp port</label>
+                                        <input type="number" class="form-control" id="port" placeholder="587" name="port" value="{{email_credentials.port}}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-Success">Update</button>
+                                  </div>
+                            </form>
+                            
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                {% else %}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compose_modal">
+                    Set Email Credentials
+                </button>
+
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="compose_modal" tabindex="-1" role="dialog" aria-labelledby="compose_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="compose_modalLabel">Set Email Credentials</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="set-email-credential" method="POST">
+                                {% csrf_token %}
+                                <div class="row justify-content-md-center">
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">Enter email address</label>
+                                        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="email_password" class="form-label">Enter email password</label>
+                                        <input type="text" class="form-control" id="email_password" placeholder="email_password" name="email_password" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="smtp_provider" class="form-label">Enter email smtp provider</label>
+                                        <input type="text" max="1000" class="form-control" id="smtp_provider" placeholder="smtp.gmail.com" name="smtp_provider" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="port" class="form-label">Enter email smtp port</label>
+                                        <input type="number" class="form-control" id="port" placeholder="587" name="port" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Set</button>
+                                  </div>
+                            </form>
+                            
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+            </li>
+            {% endif %}
+            </ul>
+        </div>
+        </div>
+    </nav>
+    {% block content %} {% endblock content %}
+    {% block javascript %}
+        <script type="text/javascript" src="{% static 'js/update.js' %}"></script>
+    {% endblock %}
+</html>

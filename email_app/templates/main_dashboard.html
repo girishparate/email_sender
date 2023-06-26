@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+<title> Mail Sender </title> 
+{% endblock title %}
+<body>
+    {%block content%} 
+    <div class="container">
+        
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+      
+                {% for i in mail_list|slice:"0:" %}
+                <a class="article-title" href="email-detail/{{i.slug}}" style="color: black;">
+                  <div class="card">
+                    <div class="card-header">
+                      {{i.subject}}
+                    </div>
+                  </div>
+                </a>
+                {% endfor %}
+          </div>
+      
+          </div>
+    </div>
+    {%endblock content%}
+</body>

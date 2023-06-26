@@ -1,0 +1,46 @@
+{% extends 'base.html'%}
+{% block title %}
+<title> {{ object.subject }} </title> 
+{% endblock title %}
+<body>
+    {%block content%} 
+        <div class="container-fluid">
+            <h5>Subject : {{ object.subject }}</h5>
+            <strong>Sent to : {{object.receiver}}</strong>
+            <br>
+            <br>
+            <div>
+                <h5>Body : </h5><br>
+                <p>
+                    {{ object.body }}
+                </p>
+            </div>
+
+            <br>
+            <b>Status : 
+                {% if object.status %}
+                    Read
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th scope="col">Read Time</th>
+                            </tr>
+                        </thead> 
+                        <tbody>
+                            {% for time in object.mailtracker_set.all %}
+                            <tr>
+                                <td>{{time.read_time}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    Not Read
+                {% endif %}
+            </b>
+            
+        </div>
+        
+    {% endblock content%}
+</body>
